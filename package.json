@@ -1,0 +1,21 @@
+{
+  "name": "iod_events_and_registrations",
+  "version": "1.0.0",
+  "description": "Created as a simple app to show how InsideOut Developments Events and Registrations pages worked.",
+  "main": "./backend/index.js",
+  "scripts": {
+    "start:server": "cd backend && npm start",
+    "start:client": "cd frontend && npm start",
+    "start": "npm-run-all --parallel start:client start:server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Verwiel/IOD_Events_and_Registrations.git"
+  },
+  "author": "Drew Verwiel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Verwiel/IOD_Events_and_Registrations/issues"
+  },
+  "homepage": "https://github.com/Verwiel/IOD_Events_and_Registrations#readme"
+}
