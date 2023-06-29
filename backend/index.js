@@ -2,7 +2,9 @@ const express = require('express')
 const path = require('path')
 const cors = require('cors')
 const app = express()
+const cron = require('node-cron')
 require('dotenv').config()
+const SalesforceFunctionAggregator = require('./salesforce/aggregator')
 
 const corsOptions = { origin: 'http://localhost:8081' }
 app.use(cors(corsOptions))
@@ -27,6 +29,10 @@ db.sequelize
 // routes
 require('./routes/event.routes')(app)
 require('./routes/register.routes')(app)
+
+// cron.schedule('* * * * *', function(){
+//     SalesforceFunctionAggregator.getAuthTokenAndPublicPrograms()
+// }, { scheduled: true, timezone: "America/Denver" })
 
 // set port, listen for requests
 const PORT = process.env.PORT || 5000

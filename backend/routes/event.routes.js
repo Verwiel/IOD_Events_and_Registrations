@@ -9,24 +9,10 @@ module.exports = function (app) {
 		next()
 	})
 
-	//   app.get("/random-word", controller.getRandomWord)
-	//   app.get("/check-word", controller.checkWordValidity)
-
-	//   app.post(
-	//     "/api/request-word",
-	//     [authJwt.verifyToken, authJwt.isModeratorOrAdmin],
-	//     controller.addWord
-	//   )
-
-	//   app.put(
-	//     "/api/approve-word",
-	//     [authJwt.verifyToken, authJwt.isModeratorOrAdmin],
-	//     controller.approveWord
-	//   )
-
-	//   app.delete(
-	//     "/api/remove-word",
-	//     [authJwt.verifyToken, authJwt.isModeratorOrAdmin],
-	//     controller.removeWord
-	//   )
+	app.get("/resync-events", controller.resync)
+	app.get("/events/salesforce-check/public-programs", controller.check)
+	app.get("/events/:id", controller.getOneEvent)
+	app.put("/events/:id", controller.updateEvent)
+	app.post("/events/", controller.addEvents)
+	app.post("/events/bulk-delete/", controller.deleteEvents)
 }
