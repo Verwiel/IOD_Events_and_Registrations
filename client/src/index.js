@@ -1,11 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import './sass/main.scss';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './sass/main.scss'
+import App from './App'
+import { BrowserRouter } from "react-router-dom"
+import { EventProvider } from './context/EventContext'
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
     <React.StrictMode>
-        <App />
+        <BrowserRouter>
+            <EventProvider>
+                <App />
+            </EventProvider>
+        </BrowserRouter>
     </React.StrictMode>
-);
+)
