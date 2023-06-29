@@ -19,8 +19,10 @@ export const EventProvider = ({ children }) => {
     const getAllUpcomingEvents = async () => {
         try {
             let { data } = await axios.get('/events/upcoming')
-            let allGrowEvents = data.filter(event => event.Campaign_Class__c.includes('GROW'))
-            let allIocEvents = data.filter(event => event.Campaign_Class__c.includes('IOC'))
+            let parentsOnly = data.filter(event => event.Campaign_Class__c.includes('Parent'))
+            let allGrowEvents = parentsOnly.filter(event => event.Campaign_Class__c.includes('GROW'))
+            let allIocEvents = parentsOnly.filter(event => event.Campaign_Class__c.includes('IOC'))
+            // Breakthroughs dosent have children events so it dosent have Parent in the campaign class.
             let allBtEvents = data.filter(event => event.Campaign_Class__c.includes('Breakthroughs'))
 
             let growEvents = {
