@@ -2,9 +2,9 @@ const express = require('express')
 const path = require('path')
 const cors = require('cors')
 const app = express()
-const cron = require('node-cron')
 require('dotenv').config()
-const SalesforceFunctionAggregator = require('./salesforce/aggregator')
+// const cron = require('node-cron')
+// const SalesforceFunctionAggregator = require('./salesforce/aggregator')
 
 const corsOptions = { origin: 'http://localhost:8081' }
 app.use(cors(corsOptions))

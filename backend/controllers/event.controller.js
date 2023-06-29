@@ -15,7 +15,7 @@ exports.resync = async (req, res) => {
 	}
 }
 
-exports.check = async (req, res) => {
+exports.getUpcomingPublicEvents = async (req, res) => {
 	try {
 		let response = await Events.findAll({ 
             where: { 

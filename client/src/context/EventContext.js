@@ -1,12 +1,14 @@
 import { useState, createContext, useContext } from 'react'
-// const eventBaseURL = ''
-// const registrationBaseUrl = ''
+import axios from 'axios'
 
 const EventContext = createContext()
 export const useEvents = () => useContext(EventContext)
 
 export const EventProvider = ({ children }) => {
-    const [events, setEvents] = useState([])
+    const [upcomingGrowEvents, setUpcomingGrowEvents] = useState([])
+    const [upcomingIocEvents, setUpcomingIocEvents] = useState([])
+    const [upcomingBtEvents, setUpcomingBtEvents] = useState([])
+
     const [selectedEvent, setSelectedEvent] = useState({})
     
 
@@ -14,12 +16,51 @@ export const EventProvider = ({ children }) => {
         setSelectedEvent(id)
     }
 
+    const getAllUpcomingEvents = async () => {
+        try {
+            let { data } = await axios.get('/events/upcoming')
+            let allGrowEvents = data.filter(event => event.Campaign_Class__c.includes('GROW'))
+            let allIocEvents = data.filter(event => event.Campaign_Class__c.includes('IOC'))
+            let allBtEvents = data.filter(event => event.Campaign_Class__c.includes('Breakthroughs'))
+
+            let growEvents = {
+                "hasEventsToDisplay": allGrowEvents.length > 0,
+                "Americas": allGrowEvents.filter(event => event.Region__c === 'Americas'),
+                "APAC": allGrowEvents.filter(event => event.Region__c === 'APAC'),
+                "EMEA": allGrowEvents.filter(event => event.Region__c === 'EMEA')
+            }
+
+            let iocEvents = {
+                "hasEventsToDisplay": allIocEvents.length > 0,
+                "Americas": allIocEvents.filter(event => event.Region__c === 'Americas'),
+                "APAC": allIocEvents.filter(event => event.Region__c === 'APAC'),
+                "EMEA": allIocEvents.filter(event => event.Region__c === 'EMEA')
+            }
+
+            let btEvents = {
+                "hasEventsToDisplay": allBtEvents.length > 0,
+                "Americas": allBtEvents.filter(event => event.Region__c === 'Americas'),
+                "APAC": allBtEvents.filter(event => event.Region__c === 'APAC'),
+                "EMEA": allBtEvents.filter(event => event.Region__c === 'EMEA')
+            }
+
+            setUpcomingGrowEvents(growEvents)
+            setUpcomingIocEvents(iocEvents)
+            setUpcomingBtEvents(btEvents)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <EventContext.Provider 
             value={{
-                events,
                 selectedEvent,
-                getEvent
+                upcomingGrowEvents,
+                upcomingIocEvents,
+                upcomingBtEvents,
+                getEvent,
+                getAllUpcomingEvents
             }}>
             { children }
         </EventContext.Provider>

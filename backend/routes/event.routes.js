@@ -10,7 +10,7 @@ module.exports = function (app) {
 	})
 
 	app.get("/resync-events", controller.resync)
-	app.get("/events/salesforce-check/public-programs", controller.check)
+	app.get("/events/upcoming", controller.getUpcomingPublicEvents)
 	app.get("/events/:id", controller.getOneEvent)
 	app.put("/events/:id", controller.updateEvent)
 	app.post("/events/", controller.addEvents)

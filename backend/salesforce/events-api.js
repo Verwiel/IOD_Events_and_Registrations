@@ -19,7 +19,7 @@ const SalesforceMiddleware = {
 					headers: { Authorization: `Bearer ${salesforceToken}` },
 				}
 			)
-			const dbRes = await axios.get(`${iodBaseUrl}/events/salesforce-check/public-programs`)
+			const dbRes = await axios.get(`${iodBaseUrl}/events/upcoming`)
 
 			let sfData = []
 			let dbData = []
