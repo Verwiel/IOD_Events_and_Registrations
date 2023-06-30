@@ -24,8 +24,8 @@ export const EventProvider = ({ children }) => {
             if(data.Campaign_Class__c.includes('GROW')){
                 setSelectedEventType('GROW Coaching')
             }
-            if(data.Campaign_Class__c.includes('InsideOut Coaching')){
-                setSelectedEventType('IOC')
+            if(data.Campaign_Class__c.includes('IOC')){
+                setSelectedEventType('InsideOut Coaching')
             }
             if(data.Campaign_Class__c.includes('Breakthroughs')){
                 setSelectedEventType('Breakthroughs')
@@ -39,11 +39,10 @@ export const EventProvider = ({ children }) => {
 
     const getAllUpcomingEvents = async () => {
         try {
-            let { data } = await axios.get('/events/upcoming')
-            let parentsOnly = data.filter(event => event.Campaign_Class__c.includes('Parent'))
-            let allGrowEvents = parentsOnly.filter(event => event.Campaign_Class__c.includes('GROW'))
-            let allIocEvents = parentsOnly.filter(event => event.Campaign_Class__c.includes('IOC'))
-            // Breakthroughs dosent have children events so it dosent have Parent in the campaign class.
+            let { data } = await axios.get('/events/upcoming-with-children')
+
+            let allGrowEvents = data.filter(event => event.Campaign_Class__c.includes('GROW'))
+            let allIocEvents = data.filter(event => event.Campaign_Class__c.includes('IOC'))
             let allBtEvents = data.filter(event => event.Campaign_Class__c.includes('Breakthroughs'))
 
             let growEvents = {
