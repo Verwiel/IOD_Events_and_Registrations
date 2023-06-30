@@ -1,20 +1,9 @@
-import { useEffect } from "react"
-import { PageHeader } from "../components/shared/PageHeader"
-import { useParams } from "react-router-dom"
-import { useEvents } from "../context/EventContext"
+import { EventAndRegistrationLayout } from "../components/shared/EventAndRegistrationLayout"
 
 export const Registration = () => {
-    const { id } = useParams()
-    const { getEvent } = useEvents()
-
-    useEffect(() => {
-        getEvent(id)
-    }, [id])
-
-
     return (
-        <main>
-            <PageHeader title="Event Registration" />
-        </main>
+        <EventAndRegistrationLayout isRegistration={true}>
+            <h1>Test</h1>
+        </EventAndRegistrationLayout>
     )
 }
