@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { PageHeader } from "../components/PageHeader"
+import { PageHeader } from "../components/shared/PageHeader"
 import { useParams } from "react-router-dom"
 import { useEvents } from "../context/EventContext"
 

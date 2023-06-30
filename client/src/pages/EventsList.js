@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useEvents } from "../context/EventContext"
-import { PageHeader } from "../components/PageHeader"
-import { EventTable } from '../components/EventTable'
+import { PageHeader } from "../components/shared/PageHeader"
+import { EventTable } from '../components/events/EventTable'
 
 export const EventsList = () => {
     const { getAllUpcomingEvents, upcomingGrowEvents, upcomingIocEvents, upcomingBtEvents } = useEvents()

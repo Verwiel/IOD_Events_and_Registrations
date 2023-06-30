@@ -5,15 +5,36 @@ const EventContext = createContext()
 export const useEvents = () => useContext(EventContext)
 
 export const EventProvider = ({ children }) => {
+    const workshopPrice = 399
+    const certPrice = 3500
+    const fullEventPrice = 3999
+    const breakthroughsPrice = 899
     const [upcomingGrowEvents, setUpcomingGrowEvents] = useState([])
     const [upcomingIocEvents, setUpcomingIocEvents] = useState([])
     const [upcomingBtEvents, setUpcomingBtEvents] = useState([])
 
     const [selectedEvent, setSelectedEvent] = useState({})
+    const [selectedEventType, setSelectedEventType] = useState({})
+    const [eventLoading, setEventLoading] = useState(true)
     
 
-    const getEvent = (id) => {
-        setSelectedEvent(id)
+    const getEvent = async (id) => {
+        try {
+            let { data } = await axios.get(`/events/with-children/${id}`)
+            if(data.Campaign_Class__c.includes('GROW')){
+                setSelectedEventType('GROW Coaching')
+            }
+            if(data.Campaign_Class__c.includes('InsideOut Coaching')){
+                setSelectedEventType('IOC')
+            }
+            if(data.Campaign_Class__c.includes('Breakthroughs')){
+                setSelectedEventType('Breakthroughs')
+            }
+            setSelectedEvent(data)
+            setEventLoading(false)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const getAllUpcomingEvents = async () => {
@@ -58,9 +79,15 @@ export const EventProvider = ({ children }) => {
         <EventContext.Provider 
             value={{
                 selectedEvent,
+                selectedEventType,
                 upcomingGrowEvents,
                 upcomingIocEvents,
                 upcomingBtEvents,
+                eventLoading,
+                workshopPrice,
+                certPrice,
+                fullEventPrice,
+                breakthroughsPrice,
                 getEvent,
                 getAllUpcomingEvents
             }}>
