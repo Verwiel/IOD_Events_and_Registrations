@@ -37,8 +37,6 @@ export const RegistrationProvider = ({ children }) => {
 
     const [selectedProgram, setSelectedProgram] = useState({})
     const [programParent, setProgramParent] = useState({})
-
-
     const [participants, setParticipants] = useState([])
     const [defaultEventPrice, setDefaultEventPrice] = useState(0)
     const [registrationEventDetails, setRegistrationEventDetails] = useState('')
@@ -152,7 +150,6 @@ export const RegistrationProvider = ({ children }) => {
         })
     }
 
-
     const handleAddParticipant = (e) => {
         e.preventDefault()
         console.log('hit')
@@ -166,7 +163,6 @@ export const RegistrationProvider = ({ children }) => {
 
         setAddParticipant(defaultParticipant)
     }
-
 
     const toggleEditParticipantModal = (index) => {
         if(index >= 0){
@@ -186,7 +182,6 @@ export const RegistrationProvider = ({ children }) => {
         }
     }
 
-
     const handleEditParticipant = (e) => {
         const { name, value } = e.target;
 
@@ -195,7 +190,6 @@ export const RegistrationProvider = ({ children }) => {
             [name] : value
         })
     }
-
 
     const handleUpdateEditedParticipant = () => {
         const index = editingParticipantIndex
@@ -235,12 +229,10 @@ export const RegistrationProvider = ({ children }) => {
         }
     }
 
-
     const handleNextStep = () => {
         let currentStepState = currentStep;
         setCurrentStep(currentStepState += 1)
     }
-
 
     const handleBackStep = () => {
         let currentStepState = currentStep;
@@ -248,11 +240,9 @@ export const RegistrationProvider = ({ children }) => {
         setOrderDidProcess(null)
     }
 
-
     const checkPromoCode = (e) => {
         e.preventDefault()
         let campaignClass = selectedProgram.Campaign_Class__c
-
         axios.get(`${promoBaseURL}/${billingForm.promoCode}/${campaignClass}`)
         .then(res => {
             console.log(res.data)
@@ -316,7 +306,6 @@ export const RegistrationProvider = ({ children }) => {
                 } else if(selectedEventType === 'breakthroughs'){
                     newPrice = breakthroughsPrice
                 }
-
                 setPricePerParticipant(newPrice)
                 setTotalPrice(newPrice * participants.length)
                 setStripeTotalPrice((newPrice * participants.length) * 100)
@@ -353,21 +342,19 @@ export const RegistrationProvider = ({ children }) => {
     }
 
     const toggleLoader = () => setDisplayLoadingIcon(!displayLoadingIcon)
+    
     const windowReset = () =>  window.scrollTo(0, 320)
-
 
     const handleSubmitRegistration = (uniqueOrderNumber) => {
         setOrderConfirmationNumber(uniqueOrderNumber)
         setCustomRegistrationData()
     }
 
-
     const setCustomRegistrationData = () => {
         let eventCityState;
         let eventState;
         let eventCountry;
         let eventZipCode;
-
         const {
             billingFirstName,
             billingLastName,
@@ -434,10 +421,8 @@ export const RegistrationProvider = ({ children }) => {
         buildRegistrationData(eventCityState, eventVenue, eventAddress, billingInfo)
     }
 
-
     //  Use this when we eliminate hubspot and want to pass data directly to Zapier
     const buildRegistrationData = ( eventCityState, eventVenue, eventAddress, billingInfo) => {
-
         const {
             billingEmail,
             billingStreetOne,
@@ -509,7 +494,6 @@ export const RegistrationProvider = ({ children }) => {
 
     const validateInputs = () => {
         let inputs = document.querySelectorAll("input, select, textarea")
-
         inputs.forEach(input => {
             input.addEventListener(
             "invalid",
