@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
-import Moment from "react-moment"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons"
+import Moment from 'react-moment'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import OrderConfirmationImage from '../../assets/order-confirmation.svg'
 import { useRegistration } from '../../context/RegistrationProvider'
 import { useEvents } from '../../context/EventProvider'
@@ -13,19 +13,7 @@ export const OrderReviewAndConfirmation = () => {
         currentStep, 
         selectedProgram, 
         participants, 
-        billingFirstName,
-        billingLastName,
-        billingEmail,
-        billingCompany,
-        billingTitle,
-        billingPhone,
-        billingStreetOne,
-        billingStreetTwo,
-        billingCity,
-        billingState,
-        billingZipCode,
         orderConfirmationNumber,
-        promoCode,
         toggleEditBillingContactModal,
         toggleEditBillingAddressModal,
         defaultEventPrice, 
@@ -35,9 +23,26 @@ export const OrderReviewAndConfirmation = () => {
         registrationEventDetails,
         handleBackStep,
         handleNextStep,
+		billingForm,
+		appliedPromoCode
     } = useRegistration()
 
-    const { Delivery_Format__c, City__c, State__c, Time_Zone__c, X1_Day_Start_DateTime__c, X2_Day_Start_date_time__c, X3_Day_End_date_time__c, Campaign_Class__c, timeZone } = selectedProgram;
+	const {
+        billingFirstName,
+        billingLastName,
+        billingEmail,
+        billingTitle,
+        billingCompany,
+        billingPhone,
+        billingStreetOne,
+        billingStreetTwo,
+        billingCity,
+        billingState,
+        billingZipCode
+    } = billingForm
+
+
+    const { Delivery_Format__c, City__c, State__c, Time_Zone__c, X1_Day_Start_DateTime__c, X2_Day_Start_date_time__c, X3_Day_End_date_time__c, Campaign_Class__c } = selectedProgram;
 
 	const promoDeduction = (defaultEventPrice * (participants.length)) - totalPrice
 	const reviewLocation = Delivery_Format__c === 'Virtual' ? `Virtual Classroom - ${RegexTimeZone(Time_Zone__c)}` : `${City__c}, ${State__c}`
@@ -253,7 +258,7 @@ export const OrderReviewAndConfirmation = () => {
 						</li>
 						
 						<li style={{ marginBottom: '10px' }}>
-							<span style={{ fontWeight: '600' }}>Promo: {promoCode}{' '} (${promoDeduction})</span>
+							<span style={{ fontWeight: '600' }}>Promo: {appliedPromoCode}{' '} (${promoDeduction})</span>
 						</li>
 						
 						<li style={{ marginBottom: '10px' }}>

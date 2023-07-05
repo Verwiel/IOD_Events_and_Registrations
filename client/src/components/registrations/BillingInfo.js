@@ -1,56 +1,52 @@
-import { useEffect } from 'react'
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useRegistration } from '../../context/RegistrationProvider'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 export const BillingInfo = () => {
     const { 
-        participants,
         handleNextStep,
         handleBackStep,
-        cancelUseParticipantInfo,
-        promoCode,
         isPromocodeValid,
         checkPromoCode,
         removePromoCode,
         promoCodeError,
         promoCodeNotification,
-        toggleUseParticipantInfo,
-        useParticipantInfo,
+        appliedPromoCode,
+        handleSelectCountry,
+        handleSelectState,
+        useParticipantForBilling,
+        billingForm,
+        billingOnChange
+    } = useRegistration()
+
+    const {
         billingFirstName,
         billingLastName,
         billingEmail,
-        billingCompany,
         billingTitle,
+        billingCompany,
         billingPhone,
         billingStreetOne,
         billingStreetTwo,
         billingCity,
         billingState,
-        billingZipCode,
         billingCountry,
-        handleSelectCountry,
-        handleSelectState,
-        handleChangeRegistration,
-    } = useRegistration()
-
-    const participant = participants[0]
-
-	useEffect(() => {
-		return () => cancelUseParticipantInfo()
-	}, [cancelUseParticipantInfo])
+        billingZipCode,
+        promoCode,
+    } = billingForm
 
     // if promo code is entered makes sure its valid then sends you to the next step,
 	// if you empty the input and click next it will let you continue
 	// BUG: have to click next twice if reentering a valid promo code. 
 	const handleAddPromoNextStep = (e) => {
 		e.preventDefault()
-		if (promoCode.length > 0) {
+		if (appliedPromoCode.length > 0) {
 			checkPromoCode(e);
 			if (isPromocodeValid === true) {
 				handleNextStep();
 			} 
-		} else if (!promoCode){
+		} else if (appliedPromoCode){
 			handleNextStep();
 		}
 	}
@@ -62,14 +58,14 @@ export const BillingInfo = () => {
 
     return (
         <section>
-            <form onSubmit={!promoCode ? handleSetNextStep : handleAddPromoNextStep}>
+            <form onSubmit={!appliedPromoCode ? handleSetNextStep : handleAddPromoNextStep}>
                 <section>
                     <h3 className='registrations-headers'>PROMO CODE</h3>
                     <div className='form-single-field text-body'>
                         <input
                             type="text"
                             name="promoCode"
-                            onChange={handleChangeRegistration}
+                            onChange={billingOnChange}
                             value={promoCode}
                             autoComplete="autocomplete_off"
                         />
@@ -84,8 +80,8 @@ export const BillingInfo = () => {
                     </div>
                     {isPromocodeValid && 
                         <div>
-                            {promoCode}
-                            <FontAwesomeIcon onClick={removePromoCode} icon={"times"} style={{margin: '5px 0 0 5px', cursor: 'pointer'}}/>
+                            {appliedPromoCode}
+                            <FontAwesomeIcon onClick={removePromoCode} icon={faTimes} style={{margin: '5px 0 0 5px', cursor: 'pointer'}}/>
                         </div>
                     }
                     {promoCodeError && <div className="error-warning" style={{marginTop: '5px'}}>{promoCodeError}</div>}
@@ -96,7 +92,7 @@ export const BillingInfo = () => {
                     <h3 className='registrations-headers'>BILLING INFORMATION</h3>
                     <div className='form-single-field'>
                         <label htmlFor="useParticipantInfo">Use First Participants Information?</label>
-                        <input name='useParticipantInfo' type="checkbox" onClick={toggleUseParticipantInfo}/>
+                        <input name='useParticipantForBilling' type="checkbox" onClick={useParticipantForBilling}/>
                     </div>
                     <label htmlFor="billingFirstName">
                         <p>First Name*</p>
@@ -104,8 +100,8 @@ export const BillingInfo = () => {
                             type="text"
                             name="billingFirstName"
                             required={true}
-                            onChange={handleChangeRegistration}
-                            value={useParticipantInfo ? participant.firstName : billingFirstName}
+                            onChange={billingOnChange}
+                            value={billingFirstName}
                         />
                     </label>
                     <label htmlFor="billingLastName">
@@ -114,8 +110,8 @@ export const BillingInfo = () => {
                             type="text"
                             name="billingLastName"
                             required={true}
-                            onChange={handleChangeRegistration}
-                            defaultValue={useParticipantInfo ? participant.lastName : billingLastName}
+                            onChange={billingOnChange}
+                            value={billingLastName}
                         />
                     </label>
                     <label htmlFor="billingEmail">
@@ -124,8 +120,8 @@ export const BillingInfo = () => {
                             type="email"
                             name="billingEmail"
                             required={true}
-                            onChange={handleChangeRegistration}
-                            defaultValue={useParticipantInfo ? participant.email : billingEmail}
+                            onChange={billingOnChange}
+                            value={billingEmail}
                         />
                     </label>
                     <label htmlFor="billingCompany">
@@ -134,8 +130,8 @@ export const BillingInfo = () => {
                             type="text"
                             name="billingCompany"
                             required={true}
-                            onChange={handleChangeRegistration}
-                            defaultValue={useParticipantInfo ? participant.company : billingCompany}
+                            onChange={billingOnChange}
+                            value={billingCompany}
                         />
                     </label>
                     <label htmlFor="billingTitle">
@@ -144,8 +140,8 @@ export const BillingInfo = () => {
                             type="text"
                             name="billingTitle"
                             required={true}
-                            onChange={handleChangeRegistration}
-                            defaultValue={useParticipantInfo ? participant.title : billingTitle}
+                            onChange={billingOnChange}
+                            value={billingTitle}
                         />
                     </label>
                     <label htmlFor="billingPhone">
@@ -153,10 +149,10 @@ export const BillingInfo = () => {
                         <input
                             type="tel"
                             name="billingPhone"
-                            pattern='[0-9-_.]{1,30}'
+                            pattern='[0-9]{10}'
                             required={true}
-                            onChange={handleChangeRegistration}
-                            defaultValue={useParticipantInfo ? participant.phone : billingPhone}
+                            onChange={billingOnChange}
+                            value={billingPhone}
                         />
                     </label>
                 </section>
@@ -169,8 +165,8 @@ export const BillingInfo = () => {
                             type="text"
                             name="billingStreetOne"
                             required={true}
-                            onChange={handleChangeRegistration}
-                            defaultValue={billingStreetOne}
+                            onChange={billingOnChange}
+                            value={billingStreetOne}
                         />
                     </label>
                     <label htmlFor="billingStreetTwo">
@@ -178,8 +174,8 @@ export const BillingInfo = () => {
                         <input
                             type="text"
                             name="billingStreetTwo"
-                            onChange={handleChangeRegistration}
-                            defaultValue={billingStreetTwo}
+                            onChange={billingOnChange}
+                            value={billingStreetTwo}
                         />
                     </label>
                     <label htmlFor="billingCity">
@@ -188,8 +184,8 @@ export const BillingInfo = () => {
                             type="text"
                             name="billingCity"
                             required={true}
-                            onChange={handleChangeRegistration}
-                            defaultValue={billingCity}
+                            onChange={billingOnChange}
+                            value={billingCity}
                         />
                     </label>
                     <label htmlFor="billingState">
@@ -217,8 +213,8 @@ export const BillingInfo = () => {
                             type="text"
                             name="billingZipCode"
                             required={true}
-                            onChange={handleChangeRegistration}
-                            defaultValue={billingZipCode}
+                            onChange={billingOnChange}
+                            value={billingZipCode}
                         />
                     </label>
                 </section>

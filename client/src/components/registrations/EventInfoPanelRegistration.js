@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useRegistration } from '../../context/RegistrationProvider'
 
 export const EventInfoPanelRegistration = () => {
-    const { participants, defaultEventPrice, promoCode, registrationEventDetails, totalPrice } = useRegistration()
+    const { participants, defaultEventPrice, registrationEventDetails, totalPrice, appliedPromoCode } = useRegistration()
 
     const [promoDeduction, setPromoDeduction] = useState()
     const tuitionParticipantList = participants.map((person) => {
@@ -15,9 +15,13 @@ export const EventInfoPanelRegistration = () => {
 	})
 	
 	useEffect(() => {
-		let findPromoDeduction = (defaultEventPrice * (participants.length)) - totalPrice
+		let findPromoDeduction = (defaultEventPrice * participants.length) - totalPrice
 		setPromoDeduction(findPromoDeduction)
 	}, [defaultEventPrice, participants.length, totalPrice, promoDeduction])
+
+    // console.log(participants.length)
+    // console.log(defaultEventPrice)
+    // console.log(totalPrice)
 
     return (
         <>
@@ -43,7 +47,7 @@ export const EventInfoPanelRegistration = () => {
                     {promoDeduction > 0 &&
                         <section>
                             <span>
-                                <p>Promo: {promoCode}</p>
+                                <p>Promo: {appliedPromoCode}</p>
                                 <p>(${promoDeduction})</p>
                             </span>
                         </section>

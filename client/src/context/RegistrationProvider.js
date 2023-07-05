@@ -18,17 +18,31 @@ export const RegistrationProvider = ({ children }) => {
         phone : '',
     }
 
+    const defaultBilling = {
+        billingFirstName: '',
+        billingLastName: '',
+        billingEmail: '',
+        billingTitle: '',
+        billingCompany: '',
+        billingPhone: '',
+        billingStreetOne: '',
+        billingStreetTwo: '',
+        billingCity: '',
+        billingState: '',
+        billingCountry: 'United States',
+        billingZipCode: '',
+        promoCode: '',
+        billingPaymentMethod: 'Credit Card'
+    }
+
     const [selectedProgram, setSelectedProgram] = useState({})
     const [programParent, setProgramParent] = useState({})
 
 
     const [participants, setParticipants] = useState([])
     const [defaultEventPrice, setDefaultEventPrice] = useState(0)
-    const [promoCode, setPromoCode] = useState('')
     const [registrationEventDetails, setRegistrationEventDetails] = useState('')
     const [totalPrice, setTotalPrice] = useState(0)
-    const [registrationSelectedEvent, setRegistrationSelectedEvent] = useState({})
-    const [selectedEventId, setSelectedEventId] = useState('')
     const [selectedEventType, setSelectedEventType] = useState('')
     const [pricePerParticipant, setPricePerParticipant] = useState(0)
     const [stripeTotalPrice, setStripeTotalPrice] = useState(100)
@@ -45,57 +59,52 @@ export const RegistrationProvider = ({ children }) => {
     const [isShowingEditBillingAddressModal, setIsShowingEditBillingAddressModal] = useState(false)
     const [isShowingDeleteParticipantModal, setIsShowingDeleteParticipantModal] = useState(false)
     const [useParticipantInfo, setUseParticipantInfo] = useState(false)
-    const [billingFirstName, setBillingFirstName] = useState('')
-    const [billingLastName, setBillingLastName] = useState('')
-    const [billingEmail, setBillingEmail] = useState('')
-    const [billingTitle, setBillingTitle] = useState('')
-    const [billingCompany, setBillingCompany] = useState('')
-    const [billingPhone, setBillingPhone] = useState('')
-    const [billingStreetOne, setBillingStreetOne] = useState('')
-    const [billingStreetTwo, setBillingStreetTwo] = useState('')
-    const [billingCity, setBillingCity] = useState('')
-    const [billingState, setBillingState] = useState('')
-    const [billingCountry, setBillingCountry] = useState('United States')
-    const [billingZipCode, setBillingZipCode] = useState('')
-    const [billingPaymentMethod, setBillingPaymentMethod] = useState('Credit Card')
+    const [billingForm, setBillingForm] = useState(defaultBilling)
     const [editingParticipantIndex, setEditingParticipantIndex] = useState(null)
     const [orderConfirmationNumber, setOrderConfirmationNumber] = useState('')
     const [orderDidProcess, setOrderDidProcess] = useState(null)
     const [displayLoadingIcon, setDisplayLoadingIcon] = useState(false)
     const [addParticipant, setAddParticipant] = useState(defaultParticipant)
+    const [appliedPromoCode, setAppliedPromoCode] = useState('')
+
+    const billingOnChange = (e) => {
+        const { name, value } = e.target
+        setBillingForm({
+            ...billingForm,
+            [name]: value
+        })
+    }
+
+    const useParticipantForBilling = (e) => {
+        const { checked } = e.target
+        if(checked){
+            const participant = participants[0]
+            setUseParticipantInfo(true)
+            setBillingForm({
+                ...billingForm,
+                billingFirstName: participant.firstName,
+                billingLastName: participant.lastName,
+                billingEmail: participant.email,
+                billingTitle: participant.title,
+                billingCompany: participant.company,
+                billingPhone: participant.phone,
+            })
+        } else {
+            setUseParticipantInfo(false)
+            setBillingForm(defaultBilling)
+        }
+    }
 
     const noPayment = () => {
-        setBillingPaymentMethod('Invoice')
+        setBillingForm({
+            ...billingForm,
+            billingPaymentMethod: 'Invoice'
+        })
     }
-
-
-    const toggleUseParticipantInfo = () => {
-        const participant = participants[0]
-
-        setUseParticipantInfo(!useParticipantInfo)
-        setBillingFirstName(participant.firstName)
-        setBillingLastName(participant.lastName)
-        setBillingEmail(participant.email)
-        setBillingTitle(participant.title)
-        setBillingCompany(participant.company)
-        setBillingPhone(participant.phone)
-    }
-
 
     const cancelUseParticipantInfo = () => {
         setUseParticipantInfo(false)
     }
-
-
-    // const handleChangeRegistration  = (e) => {
-    //     let { name, value, type } = e.target
-    //     value = sanitizeData(value)
-    //     if(type === 'checkbox'){
-    //         this.setState({ [name]: !this.state[name]})
-    //     } else {
-    //         this.setState({ [name]: value })
-    //     }
-    // }
 
     const selectProgram = (parent, child, type) => {
         setSelectedProgram(child)
@@ -125,10 +134,6 @@ export const RegistrationProvider = ({ children }) => {
             setPricePerParticipant(breakthroughsPrice)
             setRegistrationEventDetails('InsideOut Breakthroughs Facilitator Certification')
             setTotalPrice(breakthroughsPrice * participants.length)
-
-            // let selectedChildBtEvent = this.state.registrationSelectedEvent
-            // selectedChildBtEvent.Campaign_Class__c = 'Breakthroughs'
-            // this.setState({  defaultEventPrice: breakthroughsPrice, pricePerParticipant: breakthroughsPrice, selectedEventType: 'breakthroughs', registrationEventDetails: 'InsideOut Breakthroughs Facilitator Certification', registrationSelectedEvent: selectedChildBtEvent })
         }
     }
 
@@ -137,7 +142,7 @@ export const RegistrationProvider = ({ children }) => {
     }
 
     const handleChangeParticipant = (e) => {
-        let { name, value, type } = e.target
+        let { name, value } = e.target
         value = sanitizeData(value)
         
         let newParticipant = addParticipant
@@ -150,11 +155,13 @@ export const RegistrationProvider = ({ children }) => {
 
     const handleAddParticipant = (e) => {
         e.preventDefault()
+        console.log('hit')
         if(addParticipant.firstName.length > 0 ){
+            console.log('hit 2')
             let newParticipantList = [...participants, addParticipant]
             setParticipants(newParticipantList)
-            setTotalPrice(pricePerParticipant * participants.length)
-            setStripeTotalPrice((pricePerParticipant*participants.length) * 100)
+            setTotalPrice(pricePerParticipant * newParticipantList.length)
+            setStripeTotalPrice((pricePerParticipant * newParticipantList.length) * 100)
         }
 
         setAddParticipant(defaultParticipant)
@@ -192,9 +199,9 @@ export const RegistrationProvider = ({ children }) => {
 
     const handleUpdateEditedParticipant = () => {
         const index = editingParticipantIndex
-        const participants = participants
+        const existingParticipants = participants
         const editedParticipant = addParticipant
-        participants.splice(index , 1, editedParticipant)
+        existingParticipants.splice(index , 1, editedParticipant)
         toggleEditParticipantModal()
     }
 
@@ -244,15 +251,14 @@ export const RegistrationProvider = ({ children }) => {
 
     const checkPromoCode = (e) => {
         e.preventDefault()
-        let campaignClass = registrationSelectedEvent.Campaign_Class__c
+        let campaignClass = selectedProgram.Campaign_Class__c
 
-        axios.get(`${promoBaseURL}/${promoCode}/${campaignClass}`)
+        axios.get(`${promoBaseURL}/${billingForm.promoCode}/${campaignClass}`)
         .then(res => {
             console.log(res.data)
-            let promoCodeEventValidity = res.data[0].validFor
             setIsPromocodeValid(true)
-            setPromoCodeDataObject(res.data[0])
-            applyPromoCode(res.data[0])
+            setPromoCodeDataObject(res.data)
+            applyPromoCode(res.data)
         })
         .catch(() => {
             setIsPromocodeValid(false)
@@ -270,7 +276,7 @@ export const RegistrationProvider = ({ children }) => {
                 axios.put(`${promoBaseURL}/${codeToApply.id}`, codeToApply)
                 .then(res => {
                     if(res.status === 200){
-                        let newPrice = pricePerParticipant+codeToApply.value 
+                        let newPrice = pricePerParticipant - codeToApply.value 
                         let updatedPrice;
                         newPrice >= 0 ? updatedPrice = newPrice : updatedPrice = 0
 
@@ -279,6 +285,7 @@ export const RegistrationProvider = ({ children }) => {
                         setTotalPrice(updatedPrice * participants.length)
                         setStripeTotalPrice((updatedPrice * participants.length) * 100)
                         setPromoCodeError('')
+                        setAppliedPromoCode(codeToApply.name)
                     }
                 })
                 .catch(() => {
@@ -291,7 +298,6 @@ export const RegistrationProvider = ({ children }) => {
         } else {
             setPromoCodeError('You may only apply one promo code per order.')
         }
-        
     }
 
     const removePromoCode = () => {
@@ -301,11 +307,11 @@ export const RegistrationProvider = ({ children }) => {
         .then(res => {
             if(res.status === 200){
                 let newPrice;
-                if(selectedEventType === 'IOC&T3'){
+                if(selectedEventType === 'full-event'){
                     newPrice = fullEventPrice
-                } else if(selectedEventType === 'T3'){
+                } else if(selectedEventType === 'certification'){
                     newPrice = certPrice
-                } else if(selectedEventType === 'IOC'){
+                } else if(selectedEventType === 'workshop'){
                     newPrice = workshopPrice
                 } else if(selectedEventType === 'breakthroughs'){
                     newPrice = breakthroughsPrice
@@ -314,10 +320,14 @@ export const RegistrationProvider = ({ children }) => {
                 setPricePerParticipant(newPrice)
                 setTotalPrice(newPrice * participants.length)
                 setStripeTotalPrice((newPrice * participants.length) * 100)
-                setPromoCode('')
                 setIsPromocodeValid(null)
                 setAlreadyUsedPromoCode(false)
                 setPromoCodeError(null)
+                setBillingForm({
+                    ...billingForm,
+                    promoCode: ''
+                })
+                setAppliedPromoCode('')
             }
         })
         .catch(() => {
@@ -328,13 +338,22 @@ export const RegistrationProvider = ({ children }) => {
 
 
     const handleSelectCountry = (val) => {
-        setBillingCountry(val)
-        setBillingState('')
+        setBillingForm({
+            ...billingForm,
+            billingState: '',
+            billingCountry: val
+        })
+    }
+
+    const handleSelectState = (val) => {
+        setBillingForm({
+            ...billingForm,
+            billingState: val
+        })
     }
 
     const toggleLoader = () => setDisplayLoadingIcon(!displayLoadingIcon)
     const windowReset = () =>  window.scrollTo(0, 320)
-    const handleSelectState = (val) => setBillingState(val)
 
 
     const handleSubmitRegistration = (uniqueOrderNumber) => {
@@ -348,6 +367,20 @@ export const RegistrationProvider = ({ children }) => {
         let eventState;
         let eventCountry;
         let eventZipCode;
+
+        const {
+            billingFirstName,
+            billingLastName,
+            billingEmail,
+            billingCompany,
+            billingPhone,
+            billingStreetOne,
+            billingStreetTwo,
+            billingCity,
+            billingState,
+            billingCountry,
+            billingZipCode
+        } = billingForm
 
         if(!programParent.State__c){
             eventState = ' '
@@ -373,8 +406,8 @@ export const RegistrationProvider = ({ children }) => {
         programParent.Venue__c === null ? eventVenue = 'TBD' : eventVenue = programParent.Venue__c
         programParent.Street_Address__c === null ? eventAddress = 'TBD' : eventAddress = programParent.Street_Address__c
         
-        if(registrationSelectedEvent.Campaign_Class__c === 'Breakthroughs'){
-            eventCityState = registrationSelectedEvent.City__c 
+        if(selectedProgram.Campaign_Class__c === 'Breakthroughs'){
+            eventCityState = selectedProgram.City__c 
         } else {
             eventCityState = `${programParent.City__c}, ${eventState} ${eventCountry}${eventZipCode}`
         }
@@ -404,6 +437,18 @@ export const RegistrationProvider = ({ children }) => {
 
     //  Use this when we eliminate hubspot and want to pass data directly to Zapier
     const buildRegistrationData = ( eventCityState, eventVenue, eventAddress, billingInfo) => {
+
+        const {
+            billingEmail,
+            billingStreetOne,
+            billingStreetTwo,
+            billingCity,
+            billingState,
+            billingCountry,
+            billingZipCode,
+            billingPaymentMethod
+        } = billingForm
+
         let pendingPromises = []
         participants.forEach((participant, index) => {
             let registrationData = {
@@ -418,7 +463,7 @@ export const RegistrationProvider = ({ children }) => {
                 "state" : billingState ,
                 "country" : billingCountry, 
                 "zip" : billingZipCode ,
-                "salesforce_campaign_id" : selectedEventId , 
+                "salesforce_campaign_id" : selectedProgram.Id, 
                 "payment_type" : billingPaymentMethod , 
                 "total_payment_amount" : totalPrice ,  // Payment value (in dollars)
                 "price_per_participant" : pricePerParticipant ,
@@ -427,19 +472,14 @@ export const RegistrationProvider = ({ children }) => {
                 "zap_submission_iteration" : index+1 , // The current iteration of form to be submitted to zapier 
                 "billing_info" :  billingInfo , 
                 "billing_contact_email" : billingEmail,
-                "classroom_link_1_day": registrationSelectedEvent.Classroom_Link_1_Day__c,
-                "classroom_link_t3": registrationSelectedEvent.Classroom_Link_T3__c,
+                "classroom_link_1_day": selectedProgram.Classroom_Link_1_Day__c,
+                "classroom_link_t3": selectedProgram.Classroom_Link_T3__c,
                 "domain": participant.email.slice(participant.email.indexOf('@')+1),
             }
-            let access = selectedEventType
+
             if(selectedEventType !== 'breakthroughs'){
                 // currently all overflow events are for GROW Coaching, comment out the check and leave community = 'coaching' if this changes.
-                if(programParent.Campaign_Class__c.includes("GROW")){
-                    access = { grantGrowCoaching: true }
-                } else {
-                    access = { grantIoc: true }
-                }
-                registrationData["delivery_format"] = registrationSelectedEvent.Delivery_Format__c 
+                registrationData["delivery_format"] = selectedProgram.Delivery_Format__c 
                 registrationData["registration_event_details"] = registrationEventDetails 
                 registrationData["event_venue"] = eventVenue  
                 registrationData["event_address"] = eventAddress 
@@ -486,8 +526,7 @@ export const RegistrationProvider = ({ children }) => {
         <RegistrationContext.Provider 
             value={{
                 participants, 
-                defaultEventPrice, 
-                promoCode, 
+                defaultEventPrice,
                 registrationEventDetails, 
                 totalPrice,
                 currentStep,
@@ -495,28 +534,13 @@ export const RegistrationProvider = ({ children }) => {
                 selectedProgram,
                 selectedEventType,
                 addParticipant,
-                billingFirstName,
-                billingLastName,
-                billingEmail,
-                billingCompany,
-                billingTitle,
-                billingPhone,
-                billingStreetOne,
-                billingStreetTwo,
-                billingCity,
-                billingState,
-                billingZipCode,
-                billingCountry,
-                billingPaymentMethod,
                 orderConfirmationNumber,
-                orderDidProcess,
-                promoCode,
                 isPromocodeValid,
                 checkPromoCode,
                 removePromoCode,
                 promoCodeError,
                 promoCodeNotification,
-                toggleUseParticipantInfo,
+                appliedPromoCode,
                 displayLoadingIcon,
                 useParticipantInfo,
                 handleSelectCountry,
@@ -535,6 +559,11 @@ export const RegistrationProvider = ({ children }) => {
                 handleAddParticipant, 
                 noPayment,
                 handleSubmitRegistration,
+
+
+                billingOnChange,
+                billingForm,
+                useParticipantForBilling
             }}>
             { children }
         </RegistrationContext.Provider>

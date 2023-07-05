@@ -11,7 +11,7 @@ export const EventAndRegistrationLayout = ({ children, isRegistration }) => {
 
     useEffect(() => {
         getEvent(id)
-    }, [id])
+    }, [id, getEvent])
 
     return (
         <main className="page-layout">

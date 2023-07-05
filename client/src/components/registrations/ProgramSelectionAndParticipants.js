@@ -39,7 +39,7 @@ export const ProgramSelectionAndParticipants = () => {
 								type="radio"
 								name="selectedEventId"
 								id={selectedEvent.Id}
-								value={breakthroughsPrice}
+								value={+breakthroughsPrice}
 								required={true}
 								onChange={() => selectProgram(selectedEvent, selectedEvent, 'breakthroughs')}
 							/>
@@ -56,7 +56,7 @@ export const ProgramSelectionAndParticipants = () => {
 									type="radio"
 									name="selectedEventId"
 									id={fullEvent.Id}
-									value={fullEventPrice}
+									value={+fullEventPrice}
 									required={!participants.length ? true : false}
 									onChange={() => selectProgram(selectedEvent, selectedEvent.fullEvent, 'full-event')}
 									// checked={selectedEventType === 'IOC&T3' ? true : false}
@@ -73,7 +73,7 @@ export const ProgramSelectionAndParticipants = () => {
 										type="radio"
 										name="selectedEventId"
 										id={certification.Id}
-										value={certPrice}
+										value={+certPrice}
 										required={!participants.length ? true : false}
 										onChange={() => selectProgram(selectedEvent, selectedEvent.certification, 'certification')}
 										// Auto checked if its the only option
@@ -104,7 +104,7 @@ export const ProgramSelectionAndParticipants = () => {
 									type="radio"
 									name="selectedEventId"
 									id={workshop.Id}
-									value={workshopPrice}
+									value={+workshopPrice}
 									required={!participants.length ? true : false}
 									onChange={() => selectProgram(selectedEvent, selectedEvent.workshop, 'workshop')}
 									// Auto checked if its the only option

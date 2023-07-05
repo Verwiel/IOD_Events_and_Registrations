@@ -12,7 +12,7 @@ export const EventParticipantForm = () => {
                 <input 
                     type='text'
                     name="firstName"
-                    required= {isRequired}
+                    required={isRequired}
                     onChange={handleChangeParticipant}
                     value={addParticipant.firstName}
                 />
@@ -22,7 +22,7 @@ export const EventParticipantForm = () => {
                 <input
                     type='text'
                     name="lastName"
-                    required= {isRequired}
+                    required={isRequired}
                     onChange={handleChangeParticipant}
                     value={addParticipant.lastName}
                 />
@@ -32,7 +32,7 @@ export const EventParticipantForm = () => {
                 <input
                     type='email'
                     name="email"
-                    required= {isRequired}
+                    required={isRequired}
                     onChange={handleChangeParticipant}
                     value={addParticipant.email}
                 />
@@ -42,7 +42,7 @@ export const EventParticipantForm = () => {
                 <input 
                     type='text'
                     name="company"
-                    required= {isRequired}
+                    required={isRequired}
                     onChange={handleChangeParticipant}
                     value={addParticipant.company}
                 />
@@ -52,7 +52,7 @@ export const EventParticipantForm = () => {
                 <input
                     type='text'
                     name="title"
-                    required= {isRequired}
+                    required={isRequired}
                     onChange={handleChangeParticipant}
                     value={addParticipant.title}
                 />
@@ -62,8 +62,8 @@ export const EventParticipantForm = () => {
                 <input
                     type='tel'
                     name="phone"
-                    pattern='[0-9-_.+]{1,30}'
-                    required= {isRequired}
+                    pattern="[0-9]{10}"
+                    required={isRequired}
                     onChange={handleChangeParticipant}
                     value={addParticipant.phone}
                 /> 

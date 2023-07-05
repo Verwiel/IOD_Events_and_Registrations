@@ -8,7 +8,7 @@ export const Events = () => {
 
     useEffect(() => {
         getAllUpcomingEvents()
-    }, [])
+    }, [getAllUpcomingEvents])
 
     const coachingTableHeadings = <tr className='public-events-table-thead'>
         <th>TITLE</th>

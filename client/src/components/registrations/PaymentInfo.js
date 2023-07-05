@@ -6,7 +6,10 @@ const shortuuid = require('shortid')
 const stripeBaseURL = '/v1/iod/stripe'
 
 const PaymentInfo = ({ stripe }) => {
-    const { participants, billingEmail, selectedProgram, billingFirstName, billingLastName, pricePerParticipant, stripeTotalPrice, toggleLoader, handleSubmitRegistration, billingPaymentMethod, totalPrice, noPayment, selectedEventType, handleChangeRegistration, orderDidProcess, handleBackStep, displayLoadingIcon, handleNextStep } = useRegistration()
+    const { participants, selectedProgram, pricePerParticipant, stripeTotalPrice, toggleLoader, handleSubmitRegistration, totalPrice, noPayment, selectedEventType, orderDidProcess, handleBackStep, displayLoadingIcon, handleNextStep, billingForm, billingOnChange } = useRegistration()
+
+    const { billingFirstName, billingLastName, billingEmail, billingPaymentMethod } = billingForm
+
     const [cardError, setCardError] = useState("")
     const [stripeResponse, setStripeResponse] = useState(null)
 
@@ -70,7 +73,8 @@ const PaymentInfo = ({ stripe }) => {
         if (totalPrice < 1) {
             noPayment()
         }
-    }, [noPayment, totalPrice])
+        // eslint-disable-next-line
+    }, [totalPrice])
 
     return (
         <section>
@@ -85,7 +89,7 @@ const PaymentInfo = ({ stripe }) => {
                             <select
                                 name="billingPaymentMethod"
                                 required
-                                onChange={handleChangeRegistration}
+                                onChange={billingOnChange}
                             >
                                 <option value="">---</option>
                                 <option value="Credit Card">Credit Card</option>
@@ -152,7 +156,6 @@ const PaymentInfo = ({ stripe }) => {
                                 type="checkbox"
                                 name="cancellationAgreement"
                                 required
-                                onChange={handleChangeRegistration}
                             />
                             <label htmlFor="cancellationAgreement">
                                 * I agree to the cancellation policy.
