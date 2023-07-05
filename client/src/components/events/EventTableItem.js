@@ -1,12 +1,11 @@
 import Moment from "react-moment"
 import { Link } from 'react-router-dom'
+import { RegexTimeZone } from "../../util/RegexTimeZone"
 
 export const EventTableItem = ({ event }) => {
     const { Id, Is_Workshop_Full__c, Is_T3_Full__c, Campaign_Class__c, Time_Zone__c, Delivery_Format__c, Metro_Area__c, State__c, Event_Country__c, X1_Day_Start_DateTime__c, X2_Day_Start_date_time__c, X3_Day_Start_date_time__c, workshop, certification, fullEvent } = event
 
-    const timeZoneRegExp = /\(([^)]+)\)/
-    const virtualTimeZone = timeZoneRegExp.exec(Time_Zone__c)[1]
-    const locationMetro = Delivery_Format__c === 'Virtual' ? `Virtual Classroom - ${virtualTimeZone} ` : `${Metro_Area__c}, ${ (!Event_Country__c || Event_Country__c === 'United States') ?  State__c : Event_Country__c }` 
+    const locationMetro = Delivery_Format__c === 'Virtual' ? `Virtual Classroom - ${RegexTimeZone(Time_Zone__c)} ` : `${Metro_Area__c}, ${ (!Event_Country__c || Event_Country__c === 'United States') ?  State__c : Event_Country__c }` 
     
     let eventTypeDisplay = ""
     if(Campaign_Class__c.includes('GROW')){

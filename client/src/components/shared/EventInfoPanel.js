@@ -4,6 +4,7 @@ import Moment from "react-moment"
 import { useEvents } from "../../context/EventProvider"
 import { EventInfoPanelDetails } from "../events/EventInfoPanelDetails"
 import { EventInfoPanelRegistration } from "../registrations/EventInfoPanelRegistration"
+import { RegexTimeZone } from "../../util/RegexTimeZone"
 
 export const EventInfoPanel = ({ registrationDetails }) => {
     const { selectedEvent } = useEvents()
@@ -31,9 +32,6 @@ export const EventInfoPanel = ({ registrationDetails }) => {
 
     const reviewLocation = Delivery_Format__c === 'Virtual' ? 'Virtual Classroom' : 'Venue TBD'
 
-    const timeZoneRegExp = /\(([^)]+)\)/
-    const timeZoneDisplay = timeZoneRegExp.exec(Time_Zone__c)[1]
-
     return (
         <aside className='registrations-and-event-details-panel'>
             <div className='text-body'>
@@ -48,7 +46,7 @@ export const EventInfoPanel = ({ registrationDetails }) => {
                                 <ul>
                                     <li><strong>Workshop</strong></li>
                                     <li><Moment format="dddd, ll">{X1_Day_Start_DateTime__c}</Moment></li>
-                                    <li><Moment format="LT">{X1_Day_Start_DateTime__c}</Moment> - <Moment format="LT">{X1_Day_End_Date_Time__c}</Moment> {timeZoneDisplay}</li>
+                                    <li><Moment format="LT">{X1_Day_Start_DateTime__c}</Moment> - <Moment format="LT">{X1_Day_End_Date_Time__c}</Moment> {RegexTimeZone(Time_Zone__c)}</li>
                                     {Is_Workshop_Full__c && <span className="event-sold-out">Sold Out</span>}
                                 </ul>
                             }
@@ -66,7 +64,7 @@ export const EventInfoPanel = ({ registrationDetails }) => {
                                 </>
                                 } 
                             </li>
-                            <li><Moment format="LT">{X2_Day_Start_date_time__c}</Moment> - <Moment format="LT">{X2_Day_End_date_time__c}</Moment> {timeZoneDisplay}</li>
+                            <li><Moment format="LT">{X2_Day_Start_date_time__c}</Moment> - <Moment format="LT">{X2_Day_End_date_time__c}</Moment> {RegexTimeZone(Time_Zone__c)}</li>
                             {Is_T3_Full__c && <span className="event-sold-out">Sold Out</span>}
                         </ul>
                     }

@@ -474,7 +474,7 @@ export const RegistrationProvider = ({ children }) => {
     }
 
     const validateInputs = () => {
-        let inputs = document.querySelectorAll("input, select, textarea");
+        let inputs = document.querySelectorAll("input, select, textarea")
 
         inputs.forEach(input => {
             input.addEventListener(
@@ -483,8 +483,8 @@ export const RegistrationProvider = ({ children }) => {
                 input.classList.add("error");
             },
             false
-            );
-        });
+            )
+        })
     }
 
 
@@ -498,14 +498,35 @@ export const RegistrationProvider = ({ children }) => {
                 totalPrice,
                 currentStep,
                 orderDidProcess,
-
+                selectedProgram,
                 selectedEventType,
                 addParticipant,
+                billingFirstName,
+                billingLastName,
+                billingEmail,
+                billingCompany,
+                billingTitle,
+                billingPhone,
+                billingStreetOne,
+                billingStreetTwo,
+                billingCity,
+                billingState,
+                billingZipCode,
+                orderConfirmationNumber,
+                promoCode,
+
+
+                toggleEditBillingContactModal,
+                toggleEditBillingAddressModal,
+
                 handleChangeParticipant,
                 selectProgram,
                 confirmPreviousAttendance,
-                validateInputs, windowReset,
-                handleNextStep, handleAddParticipant, 
+                validateInputs, 
+                windowReset,
+                handleBackStep,
+                handleNextStep, 
+                handleAddParticipant, 
             }}>
             { children }
         </RegistrationContext.Provider>
