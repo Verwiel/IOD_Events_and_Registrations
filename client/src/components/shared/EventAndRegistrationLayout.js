@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
-import { useEvents } from "../../context/EventContext"
+import { useEvents } from "../../context/EventProvider"
 import { PageHeader } from "./PageHeader"
 import { EventInfoPanel } from "./EventInfoPanel"
 import { EventInformationHeader } from "./EventInformationHeader"

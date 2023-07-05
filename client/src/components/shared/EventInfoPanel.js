@@ -1,7 +1,7 @@
 // Side panel that shows the event & regisration details. 
 // Used on EventPage and Registration
 import Moment from "react-moment"
-import { useEvents } from "../../context/EventContext"
+import { useEvents } from "../../context/EventProvider"
 import { EventInfoPanelDetails } from "../events/EventInfoPanelDetails"
 
 export const EventInfoPanel = ({ registrationDetails }) => {

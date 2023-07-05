@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom"
-import { useEvents } from "../../context/EventContext"
+import { useEvents } from "../../context/EventProvider"
+import { workshopPrice, certPrice, fullEventPrice, breakthroughsPrice } from '../../config/Config'
 
 export const EventInfoPanelDetails = () => {
-    const { selectedEvent, workshopPrice, certPrice, fullEventPrice, breakthroughsPrice } = useEvents()
+    const { selectedEvent } = useEvents()
     const {
 		Id,
         Campaign_Class__c,
@@ -10,7 +11,7 @@ export const EventInfoPanelDetails = () => {
         certification,
         fullEvent
 	} = selectedEvent;
-    
+
     return (
         <>
             <section>

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useEvents } from "../context/EventContext"
+import { useEvents } from "../context/EventProvider"
 import { PageHeader } from "../components/shared/PageHeader"
 import { EventTables } from '../components/events/EventTables'
 

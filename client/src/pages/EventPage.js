@@ -1,4 +1,4 @@
-import { useEvents } from "../context/EventContext"
+import { useEvents } from "../context/EventProvider"
 import { EventAndRegistrationLayout } from "../components/shared/EventAndRegistrationLayout"
 import { GrowCoachingSummary, InsideOutCoachingSummary, BreakthroughSummary } from '../components/events/EventTypeSummaries'
 

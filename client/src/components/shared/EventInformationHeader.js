@@ -1,5 +1,5 @@
 // Bar display across the top of EventPage and Registration
-import { useEvents } from "../../context/EventContext"
+import { useEvents } from "../../context/EventProvider"
 
 export const EventInformationHeader = () => {
     const { selectedEvent } = useEvents()

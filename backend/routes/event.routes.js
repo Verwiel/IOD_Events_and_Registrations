@@ -9,9 +9,11 @@ module.exports = function (app) {
 		next()
 	})
 
-	app.get("/resync-events", controller.resync)
+	app.get("/events/resync", controller.resync)
 	app.get("/events/upcoming", controller.getUpcomingPublicEvents)
+	app.get("/events/upcoming-with-children", controller.getUpcomingPublicEventsAndChildren)
 	app.get("/events/:id", controller.getOneEvent)
+	app.get("/events/with-children/:id", controller.getEventAndChildren)
 	app.put("/events/:id", controller.updateEvent)
 	app.post("/events/", controller.addEvents)
 	app.post("/events/bulk-delete/", controller.deleteEvents)

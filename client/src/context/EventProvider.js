@@ -1,14 +1,11 @@
 import { useState, createContext, useContext } from 'react'
 import axios from 'axios'
 
+
 const EventContext = createContext()
 export const useEvents = () => useContext(EventContext)
 
 export const EventProvider = ({ children }) => {
-    const workshopPrice = 399
-    const certPrice = 3500
-    const fullEventPrice = 3999
-    const breakthroughsPrice = 899
     const [upcomingGrowEvents, setUpcomingGrowEvents] = useState([])
     const [upcomingIocEvents, setUpcomingIocEvents] = useState([])
     const [upcomingBtEvents, setUpcomingBtEvents] = useState([])
@@ -83,10 +80,6 @@ export const EventProvider = ({ children }) => {
                 upcomingIocEvents,
                 upcomingBtEvents,
                 eventLoading,
-                workshopPrice,
-                certPrice,
-                fullEventPrice,
-                breakthroughsPrice,
                 getEvent,
                 getAllUpcomingEvents
             }}>
