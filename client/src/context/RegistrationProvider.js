@@ -512,13 +512,25 @@ export const RegistrationProvider = ({ children }) => {
                 billingCity,
                 billingState,
                 billingZipCode,
+                billingCountry,
+                billingPaymentMethod,
                 orderConfirmationNumber,
+                orderDidProcess,
                 promoCode,
-
-
+                isPromocodeValid,
+                checkPromoCode,
+                removePromoCode,
+                promoCodeError,
+                promoCodeNotification,
+                toggleUseParticipantInfo,
+                displayLoadingIcon,
+                useParticipantInfo,
+                handleSelectCountry,
+                handleSelectState,
+                toggleLoader,
                 toggleEditBillingContactModal,
                 toggleEditBillingAddressModal,
-
+                cancelUseParticipantInfo,
                 handleChangeParticipant,
                 selectProgram,
                 confirmPreviousAttendance,
@@ -527,6 +539,8 @@ export const RegistrationProvider = ({ children }) => {
                 handleBackStep,
                 handleNextStep, 
                 handleAddParticipant, 
+                noPayment,
+                handleSubmitRegistration,
             }}>
             { children }
         </RegistrationContext.Provider>

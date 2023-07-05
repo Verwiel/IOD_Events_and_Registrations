@@ -6,7 +6,7 @@ import { useRegistration } from "../context/RegistrationProvider"
 import { ProgramSelectionAndParticipants } from "../components/registrations/ProgramSelectionAndParticipants"
 import { BillingInfo } from '../components/registrations/BillingInfo'
 import { OrderReviewAndConfirmation } from '../components/registrations/OrderReviewAndConfirmation'
-import { PaymentInfo } from '../components/registrations/PaymentInfo'
+import PaymentInfo from '../components/registrations/PaymentInfo'
 
 export const Registration = () => {
     const { validateInputs, windowReset, currentStep, orderDidProcess } = useRegistration()
