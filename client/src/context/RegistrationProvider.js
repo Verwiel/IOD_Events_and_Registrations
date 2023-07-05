@@ -152,9 +152,7 @@ export const RegistrationProvider = ({ children }) => {
 
     const handleAddParticipant = (e) => {
         e.preventDefault()
-        console.log('hit')
         if(addParticipant.firstName.length > 0 ){
-            console.log('hit 2')
             let newParticipantList = [...participants, addParticipant]
             setParticipants(newParticipantList)
             setTotalPrice(pricePerParticipant * newParticipantList.length)
