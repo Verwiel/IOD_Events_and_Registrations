@@ -25,5 +25,6 @@ db.Sequelize = Sequelize
 db.sequelize = sequelize
 
 db.event = require('./event.model.js')(sequelize, Sequelize)
+db.promocode = require('./promo.model.js')(sequelize, Sequelize)
 
 module.exports = db

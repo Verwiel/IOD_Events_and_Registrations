@@ -9,24 +9,6 @@ module.exports = function (app) {
 		next()
 	})
 
-	// app.get('/random-word', controller.getRandomWord)
-	// app.get('/check-word', controller.checkWordValidity)
-
-	// app.post(
-	// 	'/api/request-word',
-	// 	[authJwt.verifyToken, authJwt.isModeratorOrAdmin],
-	// 	controller.addWord
-	// )
-
-	// app.put(
-	// 	'/api/approve-word',
-	// 	[authJwt.verifyToken, authJwt.isModeratorOrAdmin],
-	// 	controller.approveWord
-	// )
-
-	// app.delete(
-	// 	'/api/remove-word',
-	// 	[authJwt.verifyToken, authJwt.isModeratorOrAdmin],
-	// 	controller.removeWord
-	// )
+	app.get('/promocode/:name/:campaign', controller.getPromoCode)
+	app.put('/promocode/:id', controller.updatePromoCode)
 }

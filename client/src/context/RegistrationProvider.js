@@ -3,7 +3,7 @@ import axios from 'axios'
 import { sanitizeData } from "../util/SanatizeData"
 import { workshopPrice, certPrice, fullEventPrice, breakthroughsPrice } from '../config/Config'
 
-const promoBaseURL = '/v1/iod/promocode';
+const promoBaseURL = '/promocode';
 
 const RegistrationContext = createContext()
 export const useRegistration = () => useContext(RegistrationContext)
@@ -246,19 +246,13 @@ export const RegistrationProvider = ({ children }) => {
         e.preventDefault()
         let campaignClass = registrationSelectedEvent.Campaign_Class__c
 
-        axios.get(`${promoBaseURL}/${promoCode}`)
+        axios.get(`${promoBaseURL}/${promoCode}/${campaignClass}`)
         .then(res => {
+            console.log(res.data)
             let promoCodeEventValidity = res.data[0].validFor
-
-            if(promoCodeEventValidity === campaignClass){
-                setIsPromocodeValid(true)
-                setPromoCodeDataObject(res.data[0])
-                
-                applyPromoCode(res.data[0])
-            } else {
-                setIsPromocodeValid(false)
-                setPromoCodeNotification('This promo code is not valid for the selected event')
-            }
+            setIsPromocodeValid(true)
+            setPromoCodeDataObject(res.data[0])
+            applyPromoCode(res.data[0])
         })
         .catch(() => {
             setIsPromocodeValid(false)

@@ -32,7 +32,7 @@ const addChildrenToParent = (parent, children) => {
 exports.resync = async (req, res) => {
 	try {
 		await SalesforceFunctionAggregator.getAuthTokenAndPublicPrograms()
-		res.send({ msg: 'resync public programs ran' })
+		res.send({ message: 'resync public programs ran' })
 	} catch (err) {
 		res.status(500).send({ message: err.message })
 	}
@@ -50,7 +50,7 @@ exports.getUpcomingPublicEvents = async (req, res) => {
 
 		res.status(200).send(response)
 	} catch (err) {
-		res.status(500).send({ msg: "Something broke while getting public programs." })
+		res.status(500).send({ message: "Something broke while getting public programs." })
 	}
 }
 
@@ -79,7 +79,7 @@ exports.getUpcomingPublicEventsAndChildren = async (req, res) => {
 
 		res.status(200).send(parents)
 	} catch (err) {
-		res.status(500).send({ msg: "Something broke while getting public programs." })
+		res.status(500).send({ message: "Something broke while getting public programs." })
 	}
 }
 
@@ -90,12 +90,12 @@ exports.getOneEvent = async (req, res) => {
         })
 
         if (isEmpty(response)) {
-            return res.status(400).send({msg: "There are no events."})
+            return res.status(400).send({message: "There are no events."})
         } else {
             return res.status(200).send(response[0])
         }
 	} catch (err) {
-		res.status(500).send({ msg: "Something broke while getting the event." })
+		res.status(500).send({ message: "Something broke while getting the event." })
 	}
 }
 
@@ -118,7 +118,7 @@ exports.getEventAndChildren = async (req, res) => {
         const parentWithChildren = addChildrenToParent(parent, children)
         res.status(200).send(parentWithChildren)
     } catch (error) {
-        res.status(500).send({ msg: "Something broke while getting the event and children." })
+        res.status(500).send({ message: "Something broke while getting the event and children." })
     }
 }
 
@@ -129,7 +129,7 @@ exports.addEvents = async (req, res) => {
         res.status(201).send(response)
 
 	} catch (err) {
-		res.status(500).send({ msg: "Something broke while saving the event." })
+		res.status(500).send({ message: "Something broke while saving the event." })
 	}
 }
 
@@ -139,12 +139,12 @@ exports.updateEvent = async (req, res) => {
             where: { Id: req.params.id }
         })
         if(response[0] === 0){
-            res.status(500).send({ msg: 'Event was unable to be updated.' })
+            res.status(500).send({ message: 'Event was unable to be updated.' })
         }
-        res.status(200).send({ msg: 'Event was successfully updated!'})
+        res.status(200).send({ message: 'Event was successfully updated!'})
 
 	} catch (err) {
-		res.status(500).send({ msg: "Something broke while updating the event." })
+		res.status(500).send({ message: "Something broke while updating the event." })
 	}
 }
 
@@ -155,12 +155,12 @@ exports.deleteEvents = async (req, res) => {
         })
 
         if(response === 0){
-            res.status(500).send({ msg: 'Event was unable to be deleted.' })
+            res.status(500).send({ message: 'Event was unable to be deleted.' })
         }
-        res.status(200).send({ msg: "Event has successfully been deleted."})
+        res.status(200).send({ message: "Event has successfully been deleted."})
         
 
 	} catch (err) {
-		res.status(500).send({ msg: "Something broke while deleting the event." })
+		res.status(500).send({ message: "Something broke while deleting the event." })
 	}
 }
