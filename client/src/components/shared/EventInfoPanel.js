@@ -3,6 +3,7 @@
 import Moment from "react-moment"
 import { useEvents } from "../../context/EventProvider"
 import { EventInfoPanelDetails } from "../events/EventInfoPanelDetails"
+import { EventInfoPanelRegistration } from "../registrations/EventInfoPanelRegistration"
 
 export const EventInfoPanel = ({ registrationDetails }) => {
     const { selectedEvent } = useEvents()
@@ -94,9 +95,9 @@ export const EventInfoPanel = ({ registrationDetails }) => {
                 }
             </div>
 
-            {/* {registrationDetails &&
-                <RegistrationPanelDetails />
-            } */}
+            {registrationDetails &&
+                <EventInfoPanelRegistration />
+            }
         </aside>
     )
 }

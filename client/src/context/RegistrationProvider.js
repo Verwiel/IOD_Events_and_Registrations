@@ -1,8 +1,8 @@
 import { useState, createContext, useContext } from 'react'
 import axios from 'axios'
+import { sanitizeData } from "../util/SanatizeData"
 import { workshopPrice, certPrice, fullEventPrice, breakthroughsPrice } from '../config/Config'
 
-const eventBaseURL = '/v1/iod/events';
 const promoBaseURL = '/v1/iod/promocode';
 
 const RegistrationContext = createContext()
@@ -18,19 +18,21 @@ export const RegistrationProvider = ({ children }) => {
         phone : '',
     }
 
+    const [selectedProgram, setSelectedProgram] = useState({})
+    const [programParent, setProgramParent] = useState({})
+
+
     const [participants, setParticipants] = useState([])
     const [defaultEventPrice, setDefaultEventPrice] = useState(0)
     const [promoCode, setPromoCode] = useState('')
     const [registrationEventDetails, setRegistrationEventDetails] = useState('')
     const [totalPrice, setTotalPrice] = useState(0)
-
     const [registrationSelectedEvent, setRegistrationSelectedEvent] = useState({})
-    const [parentOfSelectedEvent, setParentOfSelectedEvent] = useState({})
     const [selectedEventId, setSelectedEventId] = useState('')
     const [selectedEventType, setSelectedEventType] = useState('')
     const [pricePerParticipant, setPricePerParticipant] = useState(0)
     const [stripeTotalPrice, setStripeTotalPrice] = useState(100)
-    // const [confirmHasPreviouslyAttended, setConfirmHasPreviouslyAttended] = useState(false)
+    const [confirmHasPreviouslyAttended, setConfirmHasPreviouslyAttended] = useState(false)
     // const [additionalParticipants, setAdditionalParticipants] = useState(false)
     const [currentStep, setCurrentStep] = useState(1)
     const [promoCodeDataObject, setPromoCodeDataObject] = useState({})
@@ -95,76 +97,55 @@ export const RegistrationProvider = ({ children }) => {
     //     }
     // }
 
+    const selectProgram = (parent, child, type) => {
+        setSelectedProgram(child)
+        setProgramParent(parent)
+        setSelectedEventType(type)
 
-    // const handleProgramSelection = (e) => {
-    //     const { id } = e.target
-    //     setSelectedEventId(id)
+        if(type === 'workshop'){
+            setDefaultEventPrice(workshopPrice)
+            setPricePerParticipant(workshopPrice)
+            setRegistrationEventDetails('Workshop')
+            setTotalPrice(workshopPrice * participants.length)
 
-    //     axios.get(`${eventBaseURL}/${id}`)
-    //     .then(res => {
-    //         const parentId = res.data[0].ParentId
-    //         const campaignClass = res.data[0].Campaign_Class__c
-    //         this.setState({registrationSelectedEvent: res.data[0]})
+        } else if (type === 'certification'){
+            setDefaultEventPrice(certPrice)
+            setPricePerParticipant(certPrice)
+            setRegistrationEventDetails('Certification')
+            setTotalPrice(certPrice * participants.length)
 
-    //         if(
-    //             campaignClass === 'IOC Registration' 
-    //             || campaignClass === 'GROW Coaching Registration'
-    //         ){
-    //             this.setState({  defaultEventPrice: workshopPrice, pricePerParticipant: workshopPrice, selectedEventType: 'IOC', registrationEventDetails: 'Workshop', totalPrice: workshopPrice*this.state.participants.length })
-    //             this.getParentEvent(parentId)
-    //         } else if(
-    //             campaignClass === 'IOCT3 Registration' 
-    //             || campaignClass === 'GROW Coaching T3 Registration'
-    //         ){
-    //             this.setState({  defaultEventPrice: certPrice, pricePerParticipant: certPrice, selectedEventType: 'T3', registrationEventDetails: 'Certification', totalPrice: certPrice*this.state.participants.length })
-    //             this.getParentEvent(parentId)
-    //         } else if(
-    //             campaignClass === 'IOC and T3 Registration' 
-    //             || campaignClass === 'GROW Coaching and T3 Registration'
-    //         ){
-    //             this.setState({  defaultEventPrice: fullEventPrice, pricePerParticipant: fullEventPrice, selectedEventType: 'IOC&T3', registrationEventDetails: 'Workshop + Certification', totalPrice: fullEventPrice*this.state.participants.length })
-    //             this.getParentEvent(parentId)
-    //         } else if(
-    //             campaignClass === 'Breakthroughs'
-    //         ){
-    //             let selectedChildBtEvent = this.state.registrationSelectedEvent
-    //             selectedChildBtEvent.Campaign_Class__c = 'Breakthroughs'
-    //             this.setState({  defaultEventPrice: breakthroughsPrice, pricePerParticipant: breakthroughsPrice, selectedEventType: 'breakthroughs', registrationEventDetails: 'InsideOut Breakthroughs Facilitator Certification', registrationSelectedEvent: selectedChildBtEvent })
-    //             this.getParentEvent(parentId)
-    //         }
-    //     })
-    //     .catch( err => err )
-    // }
+        } else if(type === 'full-event'){
+            setDefaultEventPrice(fullEventPrice)
+            setPricePerParticipant(fullEventPrice)
+            setRegistrationEventDetails('Workshop + Certification')
+            setTotalPrice(fullEventPrice * participants.length)
 
-    
-    // const getParentEvent = (parentId) => {
-    //     axios.get(`${eventBaseURL}/${parentId}`)
-    //     .then(res => {
-    //         this.setState({ parentOfSelectedEvent: res.data[0]});
-    //     })
-    //     .catch( err => err )
-    // }
+        } else if(type === 'breakthroughs'){
+            setDefaultEventPrice(breakthroughsPrice)
+            setPricePerParticipant(breakthroughsPrice)
+            setRegistrationEventDetails('InsideOut Breakthroughs Facilitator Certification')
+            setTotalPrice(breakthroughsPrice * participants.length)
 
+            // let selectedChildBtEvent = this.state.registrationSelectedEvent
+            // selectedChildBtEvent.Campaign_Class__c = 'Breakthroughs'
+            // this.setState({  defaultEventPrice: breakthroughsPrice, pricePerParticipant: breakthroughsPrice, selectedEventType: 'breakthroughs', registrationEventDetails: 'InsideOut Breakthroughs Facilitator Certification', registrationSelectedEvent: selectedChildBtEvent })
+        }
+    }
 
-    // const handleChangeParticipant = (e) => {
-    //     let { name, value, type } = e.target
-    //     value = sanitizeData(value)
+    const confirmPreviousAttendance = () => {
+        setConfirmHasPreviouslyAttended(true)
+    }
+
+    const handleChangeParticipant = (e) => {
+        let { name, value, type } = e.target
+        value = sanitizeData(value)
         
-    //     type === 'checkbox' ?
-    //     this.setState({ 
-    //         addParticipant: {
-    //             ...this.state.addParticipant,
-    //             [name]: !this.state.addParticipant[name]
-    //         }
-    //     })
-    //     :
-    //     this.setState({
-    //         addParticipant: {
-    //             ...this.state.addParticipant,
-    //             [name] : value
-    //         }
-    //     })
-    // }
+        let newParticipant = addParticipant
+        setAddParticipant({
+            ...newParticipant, 
+            [name] : value
+        })
+    }
 
 
     const handleAddParticipant = (e) => {
@@ -249,12 +230,14 @@ export const RegistrationProvider = ({ children }) => {
 
 
     const handleNextStep = () => {
-        setCurrentStep(currentStep += 1)
+        let currentStepState = currentStep;
+        setCurrentStep(currentStepState += 1)
     }
 
 
     const handleBackStep = () => {
-        setCurrentStep(currentStep -= 1)
+        let currentStepState = currentStep;
+        setCurrentStep(currentStepState -= 1)
         setOrderDidProcess(null)
     }
 
@@ -372,34 +355,34 @@ export const RegistrationProvider = ({ children }) => {
         let eventCountry;
         let eventZipCode;
 
-        if(!parentOfSelectedEvent.State__c){
+        if(!programParent.State__c){
             eventState = ' '
         }else {
-            eventState = parentOfSelectedEvent.State__c
+            eventState = programParent.State__c
         }
 
-        if(!parentOfSelectedEvent.Zip_Code__c){
+        if(!programParent.Zip_Code__c){
             eventZipCode = ' '
         } else {
-            eventZipCode = parentOfSelectedEvent.Zip_Code__c
+            eventZipCode = programParent.Zip_Code__c
         }
 
-        if(!parentOfSelectedEvent.Event_Country__c || parentOfSelectedEvent.Event_Country__c === 'United States'){
+        if(!programParent.Event_Country__c || programParent.Event_Country__c === 'United States'){
             eventCountry = ' '
         } else {
-            eventCountry = parentOfSelectedEvent.Event_Country__c
+            eventCountry = programParent.Event_Country__c
         }
 
         let eventVenue; 
         let eventAddress;
 
-        parentOfSelectedEvent.Venue__c === null ? eventVenue = 'TBD' : eventVenue = parentOfSelectedEvent.Venue__c
-        parentOfSelectedEvent.Street_Address__c === null ? eventAddress = 'TBD' : eventAddress = parentOfSelectedEvent.Street_Address__c
+        programParent.Venue__c === null ? eventVenue = 'TBD' : eventVenue = programParent.Venue__c
+        programParent.Street_Address__c === null ? eventAddress = 'TBD' : eventAddress = programParent.Street_Address__c
         
         if(registrationSelectedEvent.Campaign_Class__c === 'Breakthroughs'){
             eventCityState = registrationSelectedEvent.City__c 
         } else {
-            eventCityState = `${parentOfSelectedEvent.City__c}, ${eventState} ${eventCountry}${eventZipCode}`
+            eventCityState = `${programParent.City__c}, ${eventState} ${eventCountry}${eventZipCode}`
         }
 
         let billingInfo = ''
@@ -457,7 +440,7 @@ export const RegistrationProvider = ({ children }) => {
             let access = selectedEventType
             if(selectedEventType !== 'breakthroughs'){
                 // currently all overflow events are for GROW Coaching, comment out the check and leave community = 'coaching' if this changes.
-                if(parentOfSelectedEvent.Campaign_Class__c.includes("GROW")){
+                if(programParent.Campaign_Class__c.includes("GROW")){
                     access = { grantGrowCoaching: true }
                 } else {
                     access = { grantIoc: true }
@@ -515,7 +498,14 @@ export const RegistrationProvider = ({ children }) => {
                 totalPrice,
                 currentStep,
                 orderDidProcess,
+
+                selectedEventType,
+                addParticipant,
+                handleChangeParticipant,
+                selectProgram,
+                confirmPreviousAttendance,
                 validateInputs, windowReset,
+                handleNextStep, handleAddParticipant, 
             }}>
             { children }
         </RegistrationContext.Provider>
