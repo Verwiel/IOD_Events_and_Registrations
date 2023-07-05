@@ -11,4 +11,5 @@ module.exports = function (app) {
 
 	app.get('/promocode/:name/:campaign', controller.getPromoCode)
 	app.put('/promocode/:id', controller.updatePromoCode)
+	app.post('/charge', controller.chargeStripe)
 }

@@ -3,6 +3,8 @@ const isEmpty = require('../helper/isEmpty')
 const PromoCode = db.promocode
 const Sequelize = require('sequelize')
 const op = Sequelize.Op
+const { stripeToken } = require('../config/config')
+const stripe = require("stripe")(stripeToken)
 
 exports.getPromoCode = async (req, res) => {
     try {
@@ -44,5 +46,33 @@ exports.updatePromoCode = async (req, res) => {
         res.status(200).send({ message: 'Promo code was successfully updated!'})
     } catch (error) {
         res.status(500).send(err)
+    }
+}
+
+exports.chargeStripe = async (req, res) => {
+    const { transactionToken, eventName, cardHolderFirstName, cardHolderLastName, numberOfParticipants, pricePerParticipant, stripeTotalPrice, displayTotalPrice, orderConfirmationNumber, registeredParticipants } = req.body
+
+    try {
+        let chargeTransaction = await stripe.charges.create({
+            amount: stripeTotalPrice,  // Amount is in cents
+            currency: "usd",
+            source: transactionToken,
+            description: `${eventName} - ${registeredParticipants}`,
+            metadata: {
+                "order_number": orderConfirmationNumber,
+                "event": eventName,
+                "purchaser": `${cardHolderFirstName} ${cardHolderLastName}`,
+                "participants": registeredParticipants,
+                "total_participants": numberOfParticipants,
+                "price_per_participant": pricePerParticipant,
+                "order_total": displayTotalPrice
+            }
+        })
+
+        res.status(200).send(chargeTransaction)
+    } 
+    catch (err) {
+        logger.error('Error Processing Credit Card Payment', new Error(err))
+        res.status(500).send(err).end()
     }
 }

@@ -527,6 +527,7 @@ export const RegistrationProvider = ({ children }) => {
                 appliedPromoCode,
                 displayLoadingIcon,
                 useParticipantInfo,
+                stripeTotalPrice,
                 handleSelectCountry,
                 handleSelectState,
                 toggleLoader,

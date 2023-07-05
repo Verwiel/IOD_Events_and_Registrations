@@ -3,7 +3,6 @@ import axios from 'axios'
 import { CardNumberElement, CardExpiryElement, CardCVCElement, injectStripe } from 'react-stripe-elements'
 import { useRegistration } from '../../context/RegistrationProvider'
 const shortuuid = require('shortid')
-const stripeBaseURL = '/v1/iod/stripe'
 
 const PaymentInfo = ({ stripe }) => {
     const { participants, selectedProgram, pricePerParticipant, stripeTotalPrice, toggleLoader, handleSubmitRegistration, totalPrice, noPayment, selectedEventType, orderDidProcess, handleBackStep, displayLoadingIcon, handleNextStep, billingForm, billingOnChange } = useRegistration()
@@ -23,7 +22,6 @@ const PaymentInfo = ({ stripe }) => {
     
     const submitStripe = async (uniqueOrderNumber) => {
         let { token } = await stripe.createToken({ name: billingEmail })
-        
         let registeredParticipants = setParticipantInfo()
 
         const stripeObject = {
@@ -40,7 +38,7 @@ const PaymentInfo = ({ stripe }) => {
         }
 
         await axios
-            .post(`${stripeBaseURL}/charge`, stripeObject)
+            .post(`/charge`, stripeObject)
             .then((res) => {
                 if (res.status === 200) {
                     setStripeResponse(200)
